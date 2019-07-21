@@ -513,6 +513,8 @@ object Form1: TForm1
     Font.Name = 'SimSun'
     Font.Style = []
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 31
     OnClick = Button1Click
   end
@@ -580,8 +582,8 @@ object Form1: TForm1
   end
   object Button42: TButton
     Tag = 42
-    Left = 358
-    Top = 359
+    Left = 359
+    Top = 259
     Width = 70
     Height = 50
     Caption = 'x'
@@ -597,9 +599,9 @@ object Form1: TForm1
   object Button43: TButton
     Tag = 43
     Left = 358
-    Top = 409
+    Top = 309
     Width = 70
-    Height = 107
+    Height = 207
     Caption = 'f(x)'
     Font.Charset = ANSI_CHARSET
     Font.Color = clGreen
@@ -618,38 +620,6 @@ object Form1: TForm1
     BackgroundColor = clInactiveBorder
     TabOrder = 38
   end
-  object Button44: TButton
-    Tag = 27
-    Left = 358
-    Top = 259
-    Width = 70
-    Height = 50
-    Caption = 'e'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clGreen
-    Font.Height = -27
-    Font.Name = 'SimSun'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 39
-    OnClick = Button1Click
-  end
-  object Button45: TButton
-    Tag = 28
-    Left = 358
-    Top = 309
-    Width = 70
-    Height = 50
-    Caption = 'pi'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clGreen
-    Font.Height = -27
-    Font.Name = 'SimSun'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 40
-    OnClick = Button1Click
-  end
   object TB_accuracy: TEdit
     Left = 542
     Top = 110
@@ -657,14 +627,14 @@ object Form1: TForm1
     Height = 21
     Color = clBtnHighlight
     Enabled = False
-    TabOrder = 41
+    TabOrder = 39
   end
   object CheckBox1: TCheckBox
     Left = 402
     Top = 181
     Width = 97
     Height = 17
-    TabOrder = 42
+    TabOrder = 40
   end
   object Button36: TButton
     Tag = 36

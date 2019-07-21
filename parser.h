@@ -15,35 +15,22 @@ return 0;
 return x;
 }
 
-enum state { start, digit, double_digit, word, symbol,error };
+enum state { start, digit,  word, symbol,error };
 
 string z;
 stack <string> number_stack;
 stack <string> operation_stack;
 stack <string> num;
 
-//int const number_system = 8; // система сисления
 string file_name = "detailed_answer_kr.txt";
-int count_point = 0; // счетчик точек
-bool toch_flag = false; // флаг для ораничения колиества точек в диапозоне одного числа
+
 char s[100] = ""; // строка, содержащая вводимое выражение
 int i = 0;
-char tochnost[5] = "";
-int t_ind = 0; // индекс строки для точности числа
+
 string p = ""; // для преобразования char to string
+LongArithmetic null(1);
 
-long double fact(int N)
-{
-    if(N < 0) // если пользователь ввел отрицательное число
-        return 0; // возвращаем ноль
-    if (N == 0) // если пользователь ввел ноль,
-		return 1; // возвращаем факториал от нуля - не удивляетесь, но это 1 =)
-    else // Во всех остальных случаях
-	   { return N * fact(N - 1);
-	   } // делаем рекурсию.
-}
-
-class counter {
+class Arithmetic {
 private :
 	double element;
 public:
@@ -51,16 +38,12 @@ public:
 	void Addition(double FirstElement, double SecondElement) { element =  FirstElement + SecondElement; } //сложение
 	void Subtraction(double  FirstElement, double SecondElement) { element =  FirstElement - SecondElement; } //вычитание
 	void Multiplication(double  FirstElement, double SecondElement) { element =  FirstElement * SecondElement; } //умножение
-	void Division(double  FirstElement, double SecondElement) { element =  FirstElement / SecondElement; } // деление с остатком
 	void DivisionWithoutRemainder(double  FirstElement, double SecondElement) { element = (int) FirstElement / (int)SecondElement; } // деление без остатка
 	void Mod(double  FirstElement, double SecondElement) { element = (int) FirstElement % (int)SecondElement; }
-	void Power (double  FirstElement, double SecondElement) { element = powl( FirstElement , SecondElement); }
-
-
 	double GetElement() {return element;}
 };
 
-ar temp1, temp2;
+LongArithmetic temp1(1000), temp2(1000);
 
 class calculator {
 	private:
@@ -95,35 +78,42 @@ void opz(string operation) {
 
 //вычисление выражения, записанного в ОПЗ
 void answer(int number_system, string file_name, int accuracy) {
-counter obj;
+Arithmetic obj;
 string s;
 double n1, n2;
 int CountAction = 1; // номер действия
 ofstream f;
+f.open(file_name.c_str(), ios::app);
 while (!num.empty()) {
 	if (indexk_op(num.top()) == 7) {
 	operation_stack.push(num.top());
 	num.pop();
 	}
 	else {
-
-			temp2.StrToVector(operation_stack.top().c_str());
+	   // длинная арифметика
+		temp2.StrToVector(operation_stack.top().c_str());
+		temp2.translation(number_system, 10 , file_name);
+	   //обычная арифметика
 		string SecondDigit  = operation_stack.top().c_str();
-
 		for (int i=0;i < SecondDigit.length(); i++){
 			if (SecondDigit [i]==','){SecondDigit [i]='.'; }
 		}
 		AnsiString SecondDigitDoubel = SecondDigit.c_str();
+
 		double SecondDigitStringToDouble = string_to_double(SecondDigitDoubel.c_str());
 		if (number_system==16) {
 		n2=  translation_16(SecondDigit,number_system, accuracy, file_name);
 		}else{
 		n2 = translation_10(SecondDigitStringToDouble,number_system, accuracy, file_name);
 		}
+
 		operation_stack.pop();
 
 
-			temp1.StrToVector(operation_stack.top().c_str());
+		temp1.StrToVector(operation_stack.top().c_str());
+		temp1.translation(number_system, 10 , file_name);
+
+
 		string FirstDigit = operation_stack.top().c_str();
 
 		for (int i=0;i < FirstDigit.length(); i++){
@@ -136,79 +126,84 @@ while (!num.empty()) {
 		}else{
 		n1 = translation_10(FirstDigitStringToDouble,number_system, accuracy, file_name);
 		}
+
 		operation_stack.pop();
 
 		AnsiString CalculationResult;
+			ofstream f;
+				f.open(file_name.c_str(), ios::app);
 		switch (indexk_op(num.top())) {
-			case 5 :
-			obj.Power(n1, n2);
-			CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
-			break;
 
 			case 2:
 				if (num.top() == "+") {
-					obj.Addition(n1, n2);
-				if(Form1->CheckBox1->Checked == false)CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name, accuracy)) ;
-				else CalculationResult = (temp1 + temp2).OutputA().c_str();
+
+				obj.Addition(n1, n2);
+			if(Form1->CheckBox1->Checked == false){CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name, accuracy)) ;
+			f << CountAction << ")" << n1 << " + " << n2 << " = " <<   CalculationResult.c_str()<< endl;
+		}
+				else {
+
+				CalculationResult = (temp1 + temp2).OutputA().c_str();
+
+				f << CountAction << ")" <<  temp1.VectorToStr() << " + " <<temp2.VectorToStr()<< " = " <<   CalculationResult.c_str()<< endl;
+
+				}
+
 
 					CountAction++;
 				}
 				else {
 				   obj.Subtraction(n1, n2);
-				   if(Form1->CheckBox1->Checked == false)	CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system,file_name ,accuracy));
-				   else		CalculationResult = (temp1 - temp2).OutputA().c_str();
+				   if(Form1->CheckBox1->Checked == false) {
+					CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system,file_name ,accuracy));
+					f << CountAction << ")" << n1 << " - " << n2 << " = " <<   CalculationResult.c_str()<< endl;
+				   }else {CalculationResult = (temp1 - temp2).OutputA().c_str();
+				   f << CountAction << ")" <<  temp1.VectorToStr() << " - " <<temp2.VectorToStr()<< " = " <<   CalculationResult.c_str()<< endl;
+				   }
 					CountAction++;
 				}
 			break;
 			case 3:
 				if (num.top() == "*") {
-					obj.Multiplication(n1, n2);
-				  if(Form1->CheckBox1->Checked == false)	CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
-				  else	CalculationResult = (temp1 * temp2).OutputA().c_str();
-					CountAction++;
+				  obj.Multiplication(n1, n2);
+				  if(Form1->CheckBox1->Checked == false)  {
+				  CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
+				 f << CountAction << ")" << n1 << " * " << n2 << " = " <<   CalculationResult.c_str()<< endl;
+				 } else {
+				 CalculationResult = (temp1 * temp2).OutputA().c_str();
+				   f << CountAction << ")" <<  temp1.VectorToStr() << " * " <<temp2.VectorToStr()<< " = " <<   CalculationResult.c_str()<< endl;
+				 }	CountAction++;
 				}
-				else if (num.top() == "/") {
-					if (n2 == 0) {
-					ShowMessage( "Ошибка.\nДеление на 0.\nНажмите \"OK\" и введите корректное выражение заново.");
-					}
-				else {
-				obj.Division(n1, n2);
-				CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
-				ofstream f;
-				f.open(file_name.c_str(), ios::app);
-				f << '\t' << CountAction << ") " << translation_file(n1, number_system, file_name, accuracy) << " / " << translation_file(n2, number_system, file_name, accuracy) << " = " << CalculationResult.c_str() << endl;
-				f.close();
-				CountAction++;
-				}
-			}
 				else if (num.top() == "div") {
-					if (n2 == 0) {
+					if ( temp2 ==  null || n2 == 0) {
 					ShowMessage( "Ошибка.\nДеление на 0.\nНажмите \"OK\" и введите корректное выражение заново.");
 				}
 				else {
-				obj.DivisionWithoutRemainder(n1, n2);
-				CalculationResult =FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
-				ofstream f;
-				f.open(file_name.c_str(), ios::app);
-				f << '\t' << CountAction<< ") " << translation_file(n1, number_system, file_name, accuracy) << " div " << translation_file(n2, number_system, file_name, accuracy) << " = " << CalculationResult.c_str()<< endl;
-				f.close();
-				CountAction++;}
+				obj.DivisionWithoutRemainder(n1,n2);
+					 if(Form1->CheckBox1->Checked == false){	CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
+
+							f << CountAction << ")" << n1 << " div " << n2 << " = " <<   CalculationResult.c_str()<< endl;
+				  }else { int x = temp2.VectorToInt() ;
+					CalculationResult = (temp1 / x).OutputA().c_str();
+					  f << CountAction << ")" <<  temp1.VectorToStr() << " div " <<temp2.VectorToStr()<< " = " <<   CalculationResult.c_str()<< endl;}
+					CountAction++;}
 			}  else if (num.top() == "%") {
-					if (n2 == 0) {
+				if ( temp2 ==  null) {
 					ShowMessage( "Ошибка.\nДеление на 0.\nНажмите \"OK\" и введите корректное выражение заново.");
-					}
-				else {
-				obj.Mod(n1, n2);
-				CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
-				ofstream f;
-				f.open(file_name.c_str(), ios::app);
-				f << '\t' << CountAction << ") " << translation_file(n1, number_system, file_name, accuracy) << " % " << translation_file(n2, number_system, file_name, accuracy) << " = " << CalculationResult.c_str() << endl;
-				f.close();
-				CountAction++;
 				}
-			}
+				else {
+					  obj.Mod(n1,n2);
+
+				if(Form1->CheckBox1->Checked == false) {	CalculationResult = FloatToStr(translation_file(obj.GetElement(), number_system, file_name,accuracy));
+					f << CountAction << ")" << n1 << " % " << n2 << " = " <<   CalculationResult.c_str()<< endl;
+				 } else {int x = temp2.VectorToInt() ;
+					CalculationResult = (temp1 % x).OutputA().c_str();
+					  f << CountAction << ")" <<  temp1.VectorToStr() << " % " <<temp2.VectorToStr()<< " = " <<   CalculationResult.c_str()<< endl; }
+					CountAction++;}
+				}
 			break;
 		}
+	f.close();
 	num.pop();
 	operation_stack.push(CalculationResult.c_str());
 
@@ -240,12 +235,10 @@ while (i < s.length() - 1) {
 			case 1: state = word;
 			break;
 			case 2: state = digit;
-				if (flag) state = double_digit;
 			break;
 			case 3: state = symbol;
 			break;
 			case 4: state = start; i++;
-			count_point = 0;
 			break;
 			default: state = error;
 			break;
@@ -258,12 +251,6 @@ while (i < s.length() - 1) {
 				sl = sl + c;
 				if (index(next_c) == 4) {
 					state = start;
-					if (sl == "e") {
-					  sl ="2,71";
-					}
-				if (sl == "п") {
-					  sl = "3,14";
-					}
 					cl.opz(sl);
 					sl = "";
 				}
@@ -278,16 +265,12 @@ while (i < s.length() - 1) {
 				if (data.size()< 10000) {
 					i++;
 					data = data + c;
-						if (next_c == '.') {
-							state = double_digit;
-							flag = true;
-						}
 						if (index(next_c) == 4) {
 							state = start;
 							cl.opz(data);
 							data = "";
 							flag = false;
-							count_point = 0;
+
 						}
 				} else {
 					ShowMessage("Ошибка.\nСлишком большое число.\nНажмите \"OK\" и введите корректное выражение заново.");
@@ -298,22 +281,7 @@ while (i < s.length() - 1) {
 			break;
 		}
 	break;
-	case double_digit:
-		if(data.size()< 10000) {
-			i++;
-			data = data + c;
-			if (index(next_c) == 4) {
-				state = start;
-				cl.opz(data);
-				data = "";
-				count_point =0;
-				flag = true;
-			}
-		}else {
-			ShowMessage("Ошибка.\nСлишком большое число. \nНажмите \"OK\" и введите корректное выражение заново.");
-			return 0;
-		}
-	break;
+
 	case symbol:
 		switch (index(c)) {
 			case 3:

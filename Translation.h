@@ -33,26 +33,18 @@ double translation_file(double  digit, int number_system, string file_name, int 
 	double fraction = digit - whole_part; // дробная часть
 	int n;
 
-	ofstream f;
-	f.open(file_name.c_str(), ios::app);
-
-	f << setw(t) << " Перевод числа " << digit << " в 8-ую систему счисления : " << endl;
-
-	f << setw(t) << " Перевод целой части числа: " << endl;
-	f.close();
 
 		// перевод целой части
 		while (whole_part > 0) {
-			f.open(file_name.c_str(), ios::app);
+
 			str++;
 			n = whole_part % number_system;
-			f<< setw(t2)<<whole_part << " % " << number_system << " = " << n << endl;
+
 			answer = answer * 10 + n;
 
-			f << setw(t2-1)<< "( " << whole_part << " - " << n << " ) " << " / " << number_system;
+
 			whole_part = (whole_part - n) / number_system;
-			f << " = " << whole_part << endl;
-			f.close();
+
 		}
 	while (answer > 0) {
 		n = answer % 10;
@@ -64,24 +56,18 @@ double translation_file(double  digit, int number_system, string file_name, int 
 	double g;
 	// перевод дробной части
 	if (fraction*accuracy != 0) {
-		f.open(file_name.c_str(), ios::app);
-		f << " Перевод дробной части числа : " << endl;
+
 
 		answer = 0;
 
 		int count_accuracy = 0;
-		f << setw(t2+5) <<fraction  << endl;
-		f.close();
+
 		while (fraction*accuracy != 0) {
-			ofstream f;
-			f.open(file_name.c_str(), ios::app);
-			f <<setw(t2)<< "* " << number_system << endl;
-			f<<setw(t2+5) << "--------" << endl;
-			f <<setw(t2)<< " " << fraction * number_system << endl;
+
 			count_accuracy++;
 			answer = answer * 10 + (int)(fraction*number_system);
 			fraction = (fraction*number_system) - (int)(fraction*number_system);
-			f.close();
+
 		}
 
 		g = answer / pow(10, count_accuracy);
@@ -109,11 +95,6 @@ double translation_10(double digit, int number_system, int accuracy, string file
 					f_m = true;
 					digit= digit * (-1);
 	}
-	ofstream f;
-
-	f.open(file_name.c_str(), ios::app);
-
-	f << setw(t) << " Перевод числа " << digit << " в 10-ую систему счисления : " << endl;
 
 
 	long long answer = 0;
@@ -141,23 +122,25 @@ fraction_1=fraction_1/10;
 		return 0; }
 	   else {rez_whole_part = rez_whole_part + d * pow(number_system, str); }
 
-		f << d << " * " << number_system << '^' << str;
+
 		str++;
 		whole_part = whole_part / 10;
-		if (whole_part > 0) f << " + ";
+
 	}
 	double rez_fraction = 0;
 	str = 1;
 
 	while ( fraction*accuracy != 0) {
-	  f << " + ";
+
 		int d = fraction % 10;
 
-		if (d > (number_system - 1)) { f << "" ; }
+		if (d > (number_system - 1)) {
+
+		}
 	   else {	if (d == 0) { fraction = fraction / 10; }
 		else {
 			rez_fraction = rez_fraction + d / (pow(number_system, str));
-			f << d << " * " << number_system << '^' << "(-" << str << ')';
+
 			str++;
 			fraction = fraction / 10;
 
@@ -171,9 +154,7 @@ fraction_1=fraction_1/10;
 	 if (f_m) {
 		  rez = rez *(-1);
 	 }
-	f << "= " <<  rez << endl;
-
-	f.close();
+  
 	return rez; }
 	else {return 0;}
 }

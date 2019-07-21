@@ -54,8 +54,6 @@ __published:	// IDE-managed Components
 	TButton *Button42;
 	TButton *Button43;
 	TProgressBar *ProgressBar1;
-	TButton *Button44;
-	TButton *Button45;
 	TEdit *TB_accuracy;
 	TLabel *Label2;
 	TCheckBox *CheckBox1;

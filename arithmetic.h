@@ -10,7 +10,7 @@ int osn = 10;
 int num1 = 1000;
 char m[16] ={'0', '1', '2', '3', '4', '5','6',
 '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-class ar {
+class LongArithmetic {
 
 vector<int> a;
 vector<char> to_16;
@@ -18,7 +18,7 @@ vector<char> to_16;
 
 public:
 
-ar(int n) {
+LongArithmetic(int n) {
 
 		for(int i = 0; i<n; i++){
 			a.push_back(0);
@@ -30,8 +30,8 @@ ar(int n) {
 
 	}
 
-	ar() {}
-	~ar() { ; }
+	LongArithmetic() {}
+	~LongArithmetic() { ; }
 
 	vector<int> GetA() {
 		return a;
@@ -111,7 +111,7 @@ ar(int n) {
 
 
 
-	bool  operator==(ar b) {
+	bool  operator==(LongArithmetic b) {
 		
 		if (a.size() != b.a.size()) { 
 			return false; }
@@ -123,7 +123,7 @@ ar(int n) {
 		return true;
 	}
 
-	bool operator>(ar b) {
+	bool operator>(LongArithmetic b) {
 		if (a.size() != b.a.size())
 			return a.size() > b.a.size();
 		for (int i = a.size() - 1; i >= 0; i--) {
@@ -134,7 +134,7 @@ ar(int n) {
 		return false;
 	}
 
-	bool operator<(ar b) {
+	bool operator<(LongArithmetic b) {
 		if (a.size() != b.a.size())
 			return a.size() < b.a.size();
 		for (int i = a.size() - 1; i >= 0; i--) {
@@ -145,9 +145,9 @@ ar(int n) {
 		return false;
 	}
 
-	ar operator+(ar b) {
+	LongArithmetic operator+(LongArithmetic b) {
 	
-		ar temp;
+		LongArithmetic temp;
 		int max_size; 
 		if (a.size() < b.a.size()) {
 			max_size = b.a.size();
@@ -161,7 +161,7 @@ ar(int n) {
 				b.a.push_back(0);
 			}
 		}
-		
+
 		int r = 0;
 
 		for (int i = 0; i < max_size; i++) {
@@ -182,8 +182,8 @@ ar(int n) {
 		
 		return  temp;
 	}
-	ar operator-(ar b){
-		ar temp(num1);
+	LongArithmetic operator-(LongArithmetic b){
+		LongArithmetic temp(num1);
 
 		int max_size;
 		if (a.size() < b.a.size()) {
@@ -214,8 +214,8 @@ ar(int n) {
 	
 		return temp;
 	}	
-	ar operator*(ar b) {
-		ar temp(a.size() + b.a.size());
+	LongArithmetic operator*(LongArithmetic b) {
+		LongArithmetic temp(a.size() + b.a.size());
 		while (temp.a.size() <a.size() * b.a.size()) {
 			temp.a.push_back(0);
 		
@@ -227,7 +227,7 @@ ar(int n) {
 
 		for (int i = 0; i < a.size(); i++) {
 			int r = 0;
-			
+
 			for (int j = 0; j < b.a.size() | r; j++) {
 
 				
@@ -238,7 +238,7 @@ ar(int n) {
 				int n = temp.a.at(i + j);
 				
 				temp.a.at(i + j) = n - (r*osn);
-				
+
 			}
 		}
 
@@ -252,8 +252,8 @@ ar(int n) {
 		return temp;
 	}	
 
-ar operator/(long long x) {
-		ar temp(a.size());
+LongArithmetic operator/(long long x) {
+		LongArithmetic temp(a.size());
 		int ost = 0;
 		for (int i = temp.a.size() - 1; i >= 0; i--) {
 			int cur = ost * osn + a.at(i);
@@ -266,8 +266,8 @@ ar operator/(long long x) {
 		return temp;
 	}
 
-	ar operator%(long long x) {
-		ar temp(a.size());
+	LongArithmetic operator%(long long x) {
+		LongArithmetic temp(a.size());
 		int ost = 0;
 		for (int i = temp.a.size() - 1; i >= 0; i--) {
 			int cur = ost * osn + a.at(i);
@@ -280,82 +280,61 @@ ar operator/(long long x) {
 		stringstream ss;
 		ss << ost;
 		string str = ss.str();
-		ar ostatok;
+		LongArithmetic ostatok;
 		ostatok.StrToVector(str);
 		return ostatok;
 	}
 
-	ar translation(int number_system_of, int number_system_in, string file_name) {
+	LongArithmetic translation(int number_system_of, int number_system_in, string file_name) {
 
-		ar temp(a.size()); // для перевода в 10
-		ar temp1(a.size());
+			LongArithmetic temp(a.size()); // для перевода в 10
+		LongArithmetic temp1(a.size() );
+		int count = 0;
 		for (int i = 0; i < a.size(); i++) {
 			if (a.at(i) >= number_system_of) { cout << "Несоответсвие числа и выбранной систем счисления" << endl; }
-			//cout << "a.at(i) = " << a.at(i) << endl;
+
 
 			stringstream ss;
-			ss << a.at(i) * pow(number_system_of, i);
-			string str = ss.str();
-			//cout << "str = " << str<< endl;
+
+			long long int f  = a[i] * pow(number_system_of, i);
+				ss << f;
+				string str = ss.str();
+
 			temp1.StrToVector(str);
-		/*	cout << "temp1 = ";
-			temp1.OutputA();
-			cout << endl;
-			cout << "1) temp = ";
-			temp.OutputA();
-			cout << endl;
-			cout << "temp1 = ";
-			temp1.OutputA();
-			cout << endl;*/
+
 			temp = temp + temp1;
-			/*cout << "temp1 = ";
-			temp1.OutputA();
-			cout << endl;
-			cout << "2) temp = ";
-			temp.OutputA();
-			cout << endl;*/
+
 		}
 
-		ar rez;
-		ar v(1);
-		cout << "temp = ";
-		temp.OutputA();
-		cout << endl;
-		ar temp2(10);
+			LongArithmetic rez;
+		LongArithmetic v(1);
+
+		LongArithmetic temp2(10);
 
 
 		while (temp > v) {
-		/*	cout << "------------------" << endl;
-			cout << "temp = ";
-			temp.OutputA();
-			cout << endl;*/
 			temp2.a.clear();
 
 			temp2 = temp % number_system_in;
-			/*cout << "temp % number_system_in = ";
-			temp2.OutputA();*/
+
 			int index = temp2.VectorToInt();
-			//cout <<"index = "<< index << " rez =  ";
+
 			rez.a.push_back(index);
 			rez.to_16.push_back(index);
 			index = 0;
-			/*rez.OutputA();
-			cout << endl;*/
+
 			temp = temp / number_system_in;
-			/*cout << "temp = ";
-			temp.OutputA();
-			cout << endl;*/
+
 
 		}
 
 		rez.To16();
-		/*cout << "To16 = ";
-		rez.OutputTo_16();
-		cout << endl;*/
+
 
 		return rez;
 
 	}
+
 };
 
 #define _CRT_SECURE_NO_WARNINGS

@@ -15,7 +15,7 @@ int k, k_op;
 int index(char c) {
 	if (((c >= 'a') && (c <= 'z')) || ((c >= 'G') && (c <= 'Z')) || (c =='ï')) { k = 1; }
 	else if(((c >= '0') && (c <= '9')) ||((c >= 'A')&&(c<='F'))) { k = 2; }
-	else if ((c == '%') ||(c == '!')|| (c == '^')||(c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '(') || (c == ')')) { k = 3; }
+	else if ((c == '%') ||(c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '(') || (c == ')')) { k = 3; }
 	else if (c == ' ') { k = 4; }
 	return k;
 }
@@ -28,17 +28,7 @@ int indexk_op(string z) {
 	else if (z == "(") { k_op = 1; }
 	else if (z == ")") { k_op = 0; }
 	else if (index(z[0])==2 || z[0] == ' ') { k_op = 7; }
-	else if (z == "!") {   k_op = 6;  }
-	else if (z == "^") {   k_op = 5;  }
-	else if ((z == "sin") ||
-			 (z == "cos") ||
-			 (z == "tg") ||
-			 (z == "ctg") ||
-			 (z == "arcsin") ||
-			 (z == "arccos") ||
-			 (z == "arctg") ||
-			 (z == "arcctg") )
-			 {   k_op = 4;  }
+
 	return k_op;
 }
 
